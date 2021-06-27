@@ -1,0 +1,177 @@
+*Install-Module Az -Force -AllowClobber
+*Import-Module Az
+*Connect-AzAccount
+*Get-AzSubscription
+*Select-AzSubscription -Subscription "Free Trial" 
+# To select a particular subscrption
+*Get-AzResourceGroup
+*Get-AzResourceGroup | Format-Table
+*Get-AzResourceGroup | Format-Wide
+*Get-AzResourceGroup | Format-List
+*Get-AzResourceGroup | Export-Csv
+*Get-AzResourceGroup | Out-GridView (then it will open in outer window and will show all the resource groups in the portal in a popup window)
+*Get-AzResourceGroup | Out-GridView -PassThru(If you are having multiple resource groups and you wanted the details of a particular resource group you can                                               select, Only those things which you have selected will be shown there)
+*Get-AzResourceGroup | Select ResourceGroupName, Location, 
+-------------------------------------------------------------------------------------------------------------------------------------------
+#Where-Object
+
+*Get-AzResourceGroup | Where-Object {$_.Location -eq 'southindia'} | Select ResourceGroupName, Location 
+--------------------------------------------------------------------------------------------------------------------------------------------------
+#Creating Things in Azure using Powershell
+*New-AzResourceGroup -Name PowershellTest -Location 'North Europe'
+*New-AzVM -ResourceGroupName Free-DEV-X -Location 'Australia Central' -Image UbuntuLTS -Name Demo 
+-----------------------------------------------------------------------------------------------------------------------------------------------
+#For-each loop
+
+#If we want to create n number of resources we will use For-Each loop
+
+*$rg = "Free-DEV-X" 
+
+ foreach ($i in 1..10){
+     New-AzStorageAccount -ResourceGroupName $rg -Name "AmdemoStorage$i" -SkuName Standard_LRS -Location 'Canada Central' -AsJob 
+
+ }
+---------------------------------------------------------------------------------------------------------------------------------------------------
+Online class
+*New-
+*Set-
+*update-
+*remove-
+*Select-
+
+Execution Policies : Default execution policy is Restricted
+
+Unrestricted:This policy carries no restrictions at all, and allows us to run unsigned scripts from any source but will warn when a script has been downloaded from the Internet.
+
+Restricted:Execpt your own script, Nothing can be executed unless it happend to be written in your local machine.
+
+Bypass: This policy allows us to run scripts from anywhere, and will execute the scripts without warning regardless of the source. 
+
+Allsigned: This policy allows us to run only scripts that have been digitally signed by a trusted publisher.
+
+RemoteSigned: The policy allows us to run scripts that we have created locally, but scripts that we download must be digitally signed by a trusted publisher.
+
+*New-Item -ItemType file -Path D:\Kalyan\kalyan.exe (for creating a file)
+*New-Item -ItemType directory -Path D:\Kalyan\kalyan.exe (For creating a folder )
+
+# equals to = -eq
+# less than = -lt
+# less than equal to = -le
+# greater than = -gt
+# greater than equal to = -ge
+# not equals to = -ne
+# To start the debug mode press F9 and to continue it to the next line F11, The script needs to be saved before entering the debug mode or else it will fail.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+param(
+ [parameter(mandatory=$false)] [string] $RG="Free-DEV-X",
+ [parameter(mandatory=$false)] [string] $Location="North Europe",
+ [parameter(mandatory=$false)] [string] $Credential="kallisaysra",
+ [parameter(mandatory=$false)] [string] $Password="Kallisaysra1@"
+ )
+
+ New-AzVirtualNetwork -Name vnet01 -ResourceGroupName $RG -Location $Location -AddressPrefix 10.0.0.0/8 
+ New-AzVM -Name dem1 -ResourceGroupName $RG  -Location $Location -VirtualNetworkName vnet01 
+
+
+
+
+Param(
+[parameter(mandator=$true) [string] 
+)
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+*Invoke-Command (Runs commands on the local and remote computers as well, Before running it in the remote server the "WINDOWS REMOTE MANAGEMENT COMMAND (winRM) service needs to be running in the remote server, then only this command will work)
+
+$username='akalyan@spanx.com'
+$password= 'Khfx7Lw7' | ConvertTo-SecureString -AsPlainText -Force
+$newCredential = New-Object -TypeName pscredential $username, $password
+
+Invoke-Command -ComputerName SPX-ECOM-NPRD-01.spanx.com  -Credential $newCredential -ScriptBlock {Get-service -Name WinRM}
+
+#whatever you write in the scriptblock it will be executed on the remote server
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+*Import-Module IISAdministration -ErrorAction silentlyContinue (It will suppress the warning or error and starts executing the script)
+*Install-Module SQLPS
+*Set-Date
+*New-PSSession
+*Exit-PSSession
+*Enable-WindowsOptionalFeature -FeatureName -"IIS-
+*Get-Credential (then a popup will pop and will ask for your credentials)
+*Clear-Content -path D:\syed (It will clear the content of the file)
+*Get-LocalUser 
+*Get-disk(It will give the details of your hard disk space and all)
+*Get-Volume (It will give all the details of your drives like c, d, e and all)
+*Test-WSMan
+*Add-Printer
+*Get-NetIPAddress (it will give all the IP addresses)
+*Sort-Object
+*Get-Date
+*Get-ChildItem -path (To get all those items in that directory)
+*Get-Item -Path D:\delete.xls -Stream * (The stream cmdlet will give you all the details of the particular file)
+*Get-Content -Path D:\delete.xls (It will give all the information in that particular file)
+*Copy-Item -path -Destination
+*Move-Item -path -Destination
+*Remove-Item -path
+*Start-Sleep 10 (It will suspend the activity in a script or session for a period of time)
+*Get-Location (It will gives you the path where you have been )
+*Start-Process
+*Stop-Process
+*Test-Path D:\delete.xls (It's gonna check the file in that particular directory whether it is present there or not and will give the value in True and False statements)
+*Invoke-RestMethod -uri (some website) -OutFile D:\demo.zip (For eg If we want to download a file from the storage explorer in azure, or any website we use this command)
+*Invoke-WebRequest -uri https://www.google.com (To check the website working perfectly or not, If the status code is 200 then it is success )
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Loops :-
+
+#For loop (Doing the same thing again and again)
+
+for ($i =0; $i -le 10; $i++)
+{
+$i, "'n"
+}
+
+For Eg:
+
+K=Get-Service -Name XboxNetApiSvc
+If($k.status -eq "Stopped")
+{
+Write-Host "Service is currently stopped"
+} 
+else
+{
+Stop-Service -Name $k.Name
+write-host "Service has been stopped"
+}	
+
+#First we need to understand the difference between double quotes and single quotes, If we have given a variable in the powershell,
+#If we want the value in the variable to come out then we will use double quotes or else It doesn't represent the variable value.
+#Eg: $I= Hello WORLD
+
+#If we use "$i" then in the main screen we will see Hello world, If we used '$i' then we can only see the same thing like '$i'. 
+------------------------------------------------------------------------------------------------------------------------------------------------------------ 
+#If
+#Foreach
+#ForEach-Object
+#Do
+#While
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Parameters are of 3 types
+1)Optional parameters (parameters & its value surrounded by square brackets)
+2)Mandatory parameters (Parameters not surrounded by square brackets)
+3)Common Parameters (parameters which are common across all cmdlets)
+
+Positional Parameters is also common parameters
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Variables
+1.A variable in powershell is a unit memory which stores data temporarily.
+2.variable name starts with $sign
+3.variable name can contain any characters 
+  *should not use names from pre-defined system variables like $true, $false , $null etc.
+4.No need to mention the data type, Powershell understands by itself.
+5.To assign a value to variable = will be used.
+ *Ex: $hostname = hostname
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Varibles:
+[validateset("a", "b", "c")][string]$X = "a"
+**********when you use single quotes, the varibles don't get results*****************************
